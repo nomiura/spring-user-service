@@ -21,10 +21,12 @@ target/
 /target/
 /.idea/
 /*.iml
-/application.yml
 .mvn
 .mvnw.cmd
 .gitattributes
+/target/
+/.mvn
+/mvnw.cmd
 
 ### NetBeans ###
 /nbproject/private/
