@@ -9,6 +9,7 @@ import ru.test.dto.UserRequestDto;
 import ru.test.dto.UserResponseDto;
 import ru.test.exception.InvalidUserDataException;
 import ru.test.exception.UserNotFoundException;
+import ru.test.kafka.UserEventProducer;
 import ru.test.model.User;
 import ru.test.repository.UserRepository;
 
@@ -21,6 +22,7 @@ public class UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository repository;
+    private final UserEventProducer userEventProducer;
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto dto) {
@@ -33,7 +35,8 @@ public class UserService {
                 .age(dto.getAge())
                 .build();
         User saved = repository.save(user);
-        log.info("Пользователь создан: {}", saved.getId());
+       // log.info("Пользователь создан: {}", saved.getId());
+        userEventProducer.sendUserCreated(saved.getEmail());
         return toDto(saved);
     }
 
@@ -74,9 +77,11 @@ public class UserService {
 
     @Transactional
     public void deleteUser(Long id) {
+        User user = repository.findById(id).orElseThrow();
+        userEventProducer.sendUserDeleted(user.getEmail());
         if (!repository.existsById(id)) throw new UserNotFoundException("Пользователь не найден");
         repository.deleteById(id);
-        log.info("Пользователь удалён: {}", id);
+        //log.info("Пользователь удалён: {}", id);
     }
 
     private UserResponseDto toDto(User user) {
