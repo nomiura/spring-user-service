@@ -1,4 +1,11 @@
+topic:
+  user-events: user-events
+
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+
   datasource:
     url: jdbc:postgresql://localhost:5432/springusers_db
     username: your_username
@@ -7,3 +14,5 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+
