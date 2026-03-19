@@ -1,18 +1,32 @@
 topic:
   user-events: user-events
 
+server:
+  port: 8081
+
 spring:
+  application:
+    name: user-service
+
   kafka:
     bootstrap-servers: localhost:9092
+  config:
+    import: optional:configserver:http://localhost:8888
 
 
   datasource:
     url: jdbc:postgresql://localhost:5432/springusers_db
-    username: your_username
-    password: your_username
+    username: postgres
+    password: parolochslozh5327
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
 
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true

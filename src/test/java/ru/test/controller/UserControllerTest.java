@@ -64,9 +64,13 @@ class UserControllerTest {
         mockMvc.perform(get("/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Natalia"))
-                .andExpect(jsonPath("$[1].name").value("Ivan"));
+                .andExpect(jsonPath("$.content.length()").value(2))
+                .andExpect(jsonPath("$.content[0].name").value("Natalia"))
+                .andExpect(jsonPath("$.content[0].email").value("natalia@mail.com"))
+                .andExpect(jsonPath("$.content[0].age").value(30))
+                .andExpect(jsonPath("$.content[1].name").value("Ivan"))
+                .andExpect(jsonPath("$.content[1].email").value("ivan@mail.com"))
+                .andExpect(jsonPath("$.content[1].age").value(25));
     }
 
     @Test

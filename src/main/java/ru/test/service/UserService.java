@@ -23,6 +23,7 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository repository;
     private final UserEventProducer userEventProducer;
+    private final NotificationClient notificationClient;
 
     @Transactional
     public UserResponseDto createUser(UserRequestDto dto) {
@@ -35,8 +36,10 @@ public class UserService {
                 .age(dto.getAge())
                 .build();
         User saved = repository.save(user);
-       // log.info("Пользователь создан: {}", saved.getId());
-        userEventProducer.sendUserCreated(saved.getEmail());
+        log.info("Пользователь создан: {}", saved.getId());
+        //userEventProducer.sendUserCreated(saved.getEmail());
+
+        notificationClient.sendUserCreated(saved.getEmail());
         return toDto(saved);
     }
 
@@ -72,16 +75,19 @@ public class UserService {
 
         User updated = repository.save(user);
         log.info("Пользователь обновлён: {}", updated.getId());
+        notificationClient.sendUserCreated(updated.getEmail());
+
         return toDto(updated);
     }
 
     @Transactional
     public void deleteUser(Long id) {
         User user = repository.findById(id).orElseThrow();
-        userEventProducer.sendUserDeleted(user.getEmail());
+        //userEventProducer.sendUserDeleted(user.getEmail());
         if (!repository.existsById(id)) throw new UserNotFoundException("Пользователь не найден");
         repository.deleteById(id);
-        //log.info("Пользователь удалён: {}", id);
+        notificationClient.sendUserDeleted(user.getEmail());
+        log.info("Пользователь удалён: {}", id);
     }
 
     private UserResponseDto toDto(User user) {
