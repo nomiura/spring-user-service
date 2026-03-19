@@ -17,7 +17,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/springusers_db
     username: postgres
-    password: parolochslozh5327
+    password: ne skazhu :P
   jpa:
     hibernate:
       ddl-auto: update
